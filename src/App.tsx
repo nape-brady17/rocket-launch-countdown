@@ -1,5 +1,5 @@
 import './App.css'
-import { fetchUpcomingLaunches } from './backend/data'
+import { fetchUpcomingLaunches, fetchPreviousLaunches } from './backend/data'
 
 function App() {
 
@@ -8,7 +8,10 @@ function App() {
       <h1>Rocket Launch Countdown</h1>
       <div className="card">
         <button onClick={() => fetchUpcomingLaunches()}>
-          get launches
+          Upcoming Launches
+        </button>
+        <button onClick={() => fetchPreviousLaunches()}>
+          Previous Launches
         </button>
       </div>
     </>
