@@ -1,4 +1,4 @@
-// src/api/launches.js
+// backend/data.js
 
 export interface Launch {   // this interface can and should be expanded to include more information down the road
     name: string;
@@ -46,4 +46,22 @@ export async function fetchPreviousLaunches() {
     console.error('Failed to fetch launches:', e);
     return [];
   }
+}
+
+export function getCountdownTime(launchDate: string | undefined): [number, number, number, number] {
+  if (!launchDate) return [0, 0, 0, 0]; //there is no launch date
+
+  const now = new Date().getTime();
+  const launchTime = new Date(launchDate).getTime();
+  const diff = launchTime - now;
+
+  if (diff <= 0 ) return [0, 0, 0, 0]; // the launch already occured
+
+  const seconds = Math.floor(diff / 1000);
+  const days = Math.floor(seconds / (3600 * 24));
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  const mins = Math.floor((seconds % 3600) /60);
+  const secs = seconds % 60;
+
+  return [days, hours, mins, secs];
 }
