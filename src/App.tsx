@@ -19,6 +19,9 @@ function App() {
       const upcomingLaunches = await fetchUpcomingLaunches();
       if (upcomingLaunches.length > 0) {
         const nextLaunch = upcomingLaunches[0];
+        if (!nextLaunch) {
+          setNextLaunch({name: 'No upcoming launch', net: ''})
+        }
         setNextLaunch(nextLaunch);
       }
     };
@@ -41,12 +44,16 @@ function App() {
 
   const handleShowUpcoming = async () => {
     const upcomingLaunches = await fetchUpcomingLaunches();
-    if (!upcomingLaunches) {
-      // add a "launch" with name no launches to display
+    if (!upcomingLaunches || upcomingLaunches.length === 0) {
+      setLaunches([{ name: 'No upcoming launches', net: '' }]);
+      setViewTitle('Upcoming Launches');
+      return;
     }
     const filteredLaunches = upcomingLaunches.filter(launch => launch.name !== nextLaunch?.name);
-    if (!filteredLaunches) {
-      // add a "launch" with name no launches to display
+    if (!filteredLaunches || filteredLaunches.length === 0) {
+      setLaunches([{ name: 'No other upcoming launches', net: ''}]);
+      setViewTitle('Upcoming Launches');
+      return;
     }
     setLaunches(filteredLaunches);
     setViewTitle('Upcoming Launches');
@@ -55,7 +62,9 @@ function App() {
   const handleShowPrevious = async () => {
     const previousLaunches = await fetchPreviousLaunches();
     if (!previousLaunches) {
-      // add a "launch" with name no launches to display
+      setLaunches([{ name: 'No previous launches', net: '' }]);
+      setViewTitle('Previous Launches');
+      return;
     }
     setLaunches(previousLaunches);
     setViewTitle('Previous Launches');
@@ -93,7 +102,7 @@ function App() {
           {launches.map((launch, index) => (
             <div key={index} className="launchCard">
               <h3 className="launchName">{launch.name}</h3>
-              <p className="launchTime">{new Date(launch.net).toLocaleString()}</p>
+              <p className="launchTime">{launch.net ? new Date(launch.net).toLocaleString() : ''}</p>
             </div>
           ))}
         </div>
