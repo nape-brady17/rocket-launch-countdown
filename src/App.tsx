@@ -16,10 +16,14 @@ function App() {
 
   useEffect(() => {
     const fetchNextLaunch = async () => {
-      const upcomingLaunches = await fetchUpcomingLaunches();
-      if (upcomingLaunches.length > 0) {
-        const nextLaunch = upcomingLaunches[0];
-        setNextLaunch(nextLaunch);
+      try {
+        const upcomingLaunches = await fetchUpcomingLaunches();
+        if (upcomingLaunches.length > 0) {
+          const nextLaunch = upcomingLaunches[0];
+          setNextLaunch(nextLaunch);
+        }
+      } catch (error) {
+        console.log('An error occured fetching the next launch: ', error);
       }
     };
     fetchNextLaunch();
@@ -40,31 +44,39 @@ function App() {
   }, [nextLaunch]);  
 
   const handleShowUpcoming = async () => {
-    const upcomingLaunches = await fetchUpcomingLaunches();
-    if (!upcomingLaunches || upcomingLaunches.length === 0) {
-      setLaunches([{ name: 'No upcoming launches', net: '' }]);
+    try {
+      const upcomingLaunches = await fetchUpcomingLaunches();
+      if (!upcomingLaunches || upcomingLaunches.length === 0) {
+        setLaunches([{ name: 'No upcoming launches', net: '' }]);
+        setViewTitle('Upcoming Launches');
+        return;
+      }
+      const filteredLaunches = upcomingLaunches.filter(launch => launch.name !== nextLaunch?.name);
+      if (!filteredLaunches || filteredLaunches.length === 0) {
+        setLaunches([{ name: 'No other upcoming launches', net: ''}]);
+        setViewTitle('Upcoming Launches');
+        return;
+      }
+      setLaunches(filteredLaunches);
       setViewTitle('Upcoming Launches');
-      return;
+    } catch (error) {
+      console.log('An error occured fetching upcoming launches: ', error);
     }
-    const filteredLaunches = upcomingLaunches.filter(launch => launch.name !== nextLaunch?.name);
-    if (!filteredLaunches || filteredLaunches.length === 0) {
-      setLaunches([{ name: 'No other upcoming launches', net: ''}]);
-      setViewTitle('Upcoming Launches');
-      return;
-    }
-    setLaunches(filteredLaunches);
-    setViewTitle('Upcoming Launches');
   };
 
   const handleShowPrevious = async () => {
-    const previousLaunches = await fetchPreviousLaunches();
-    if (!previousLaunches) {
-      setLaunches([{ name: 'No previous launches', net: '' }]);
+    try {
+      const previousLaunches = await fetchPreviousLaunches();
+      if (!previousLaunches) {
+        setLaunches([{ name: 'No previous launches', net: '' }]);
+        setViewTitle('Previous Launches');
+        return;
+      }
+      setLaunches(previousLaunches);
       setViewTitle('Previous Launches');
-      return;
+    } catch (error) {
+      console.log('An error occured fetching previous launches: ', error);
     }
-    setLaunches(previousLaunches);
-    setViewTitle('Previous Launches');
   };
 
   return (
