@@ -41,7 +41,8 @@ function App() {
 
   const handleShowUpcoming = async () => {
     const upcomingLaunches = await fetchUpcomingLaunches();
-    setLaunches(upcomingLaunches);
+    const filteredLaunches = upcomingLaunches.filter(launch => launch.name !== nextLaunch?.name);
+    setLaunches(filteredLaunches);
     setViewTitle('Upcoming Launches');
   };
 
@@ -58,21 +59,18 @@ function App() {
         <><h2 className="launchTitle">Next Launch</h2><div className="launchCard">
           <h1 className="nextLaunchName">{nextLaunch.name}</h1>
           <h1 className="nextLaunchDate">{new Date(nextLaunch.net).toLocaleString()}</h1>
-          {/* <h1 className="nextLaunchCountdown">
-              T-{nextLaunchCountdown[0].toString().padStart(2, '0')}:
-              {nextLaunchCountdown[1].toString().padStart(2, '0')}:
-              {nextLaunchCountdown[2].toString().padStart(2, '0')}:
-              {nextLaunchCountdown[3].toString().padStart(2, '0')}
-            </h1> */}
-            <div className="countdownContainer">
-              {['Days', 'Hours', 'Mins', 'Secs'].map((label, i) => (
-                <div className="countdownBlock" key={label}>
-                  <div className="countdownValue">{nextLaunchCountdown[i].toString().padStart(2, '0')}</div>
-                  <div className="countdownLabel">{label}</div>
+          <div className="countdownContainer">
+            {['Days', 'Hours', 'Mins', 'Secs'].map((label, i) => (
+              <div className="countdownBlock" key={label}>
+                <div className="countdownValue">
+                  {i === 0 ? 'T-' : ''}
+                  {nextLaunchCountdown[i].toString().padStart(2, '0')}
+                  {i < 3 ? ':' : ''}
                 </div>
-              ))}
-            </div>
-          {/* <h3>Days Hours Mins Secs</h3> */}
+                <div className="countdownLabel">{label}</div>
+              </div>
+            ))}
+          </div>
         </div></>
       )}
   
