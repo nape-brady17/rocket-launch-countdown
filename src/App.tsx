@@ -41,20 +41,29 @@ function App() {
 
   const handleShowUpcoming = async () => {
     const upcomingLaunches = await fetchUpcomingLaunches();
+    if (!upcomingLaunches) {
+      // add a "launch" with name no launches to display
+    }
     const filteredLaunches = upcomingLaunches.filter(launch => launch.name !== nextLaunch?.name);
+    if (!filteredLaunches) {
+      // add a "launch" with name no launches to display
+    }
     setLaunches(filteredLaunches);
     setViewTitle('Upcoming Launches');
   };
 
   const handleShowPrevious = async () => {
     const previousLaunches = await fetchPreviousLaunches();
+    if (!previousLaunches) {
+      // add a "launch" with name no launches to display
+    }
     setLaunches(previousLaunches);
     setViewTitle('Previous Launches');
   };
 
   return (
     <>
-      <h1 className="title">Rocket Launch Countdown</h1>
+      <h1 className="title">Florida Rocket Launch Countdown</h1>
       {nextLaunch && (
         <><h2 className="launchTitle">Next Launch</h2><div className="launchCard">
           <h1 className="nextLaunchName">{nextLaunch.name}</h1>
@@ -83,8 +92,8 @@ function App() {
           <h2 className="launchTitle">{viewTitle}</h2>
           {launches.map((launch, index) => (
             <div key={index} className="launchCard">
-              <h3>{launch.name}</h3>
-              <p><strong>Launch Time:</strong> {new Date(launch.net).toLocaleString()}</p>
+              <h3 className="launchName">{launch.name}</h3>
+              <p className="launchTime">{new Date(launch.net).toLocaleString()}</p>
             </div>
           ))}
         </div>
