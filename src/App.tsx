@@ -19,9 +19,6 @@ function App() {
       const upcomingLaunches = await fetchUpcomingLaunches();
       if (upcomingLaunches.length > 0) {
         const nextLaunch = upcomingLaunches[0];
-        if (!nextLaunch) {
-          setNextLaunch({name: 'No upcoming launch', net: ''})
-        }
         setNextLaunch(nextLaunch);
       }
     };
